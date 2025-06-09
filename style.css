@@ -19,6 +19,9 @@ body {
   overflow: hidden;
   border-radius: 30px;
   background-image:url("img/dungeon.avif");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
 }
 
 .personaje {

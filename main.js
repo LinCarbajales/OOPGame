@@ -63,7 +63,7 @@ class Personaje {
         // Movimiento
         this.vx = 0;
         this.aceleracion = 1;
-        this.maxVelocidad = 10;
+        this.maxVelocidad = 8;
         this.friccion = 0.9;
         this.saltando = false;
         this.element = document.createElement("div");
