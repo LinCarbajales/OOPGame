@@ -36,11 +36,9 @@ body {
 
 .moneda {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  background-color: gold;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 2px rgba(255, 223, 0, 0.8);
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
 }
 
 #puntos {

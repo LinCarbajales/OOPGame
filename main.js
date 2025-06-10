@@ -218,17 +218,34 @@ class Moneda {
     constructor() {
         this.x = Math.random() * 700 + 50;
         this.y = Math.random() * 250 + 50;
-        this.width = 30;
-        this.height = 30;
-        this.element = document.createElement("div");
+        this.width = 64;
+        this.height = 64;
+        this.totalFrames = 60;
+        this.frame = 0;
+
+        // Usamos una imagen directamente
+        this.element = document.createElement("img");
+        this.element.width = this.width;
+        this.element.height = this.height;
         this.element.classList.add("moneda");
+        this.element.style.position = "absolute";
         this.actualizarPosicion();
-    };
+
+        // Empezamos la animación
+        this.animar();
+    }
 
     actualizarPosicion() {
         this.element.style.left = `${this.x}px`;
         this.element.style.top = `${this.y}px`;
-    };
+    }
+
+    animar() {
+        setInterval(() => {
+            this.element.src = `img/Effect1/${this.frame}.png`;
+            this.frame = (this.frame + 1) % this.totalFrames;
+        }, 100); // 10 FPS
+    }
 }
 
 const juego = new Game();
