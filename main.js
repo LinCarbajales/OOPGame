@@ -1,3 +1,5 @@
+let controlesActivos = true;
+
 class Game {
     constructor() {
         this.container = document.getElementById("game-container");
@@ -35,6 +37,8 @@ class Game {
                     this.container.removeChild(moneda.element);
                     this.monedas.splice(index, 1);
                     this.actualizarPuntuacion(10);
+                    const soulAudio = new Audio("sounds/Fireball 2.wav");
+                    soulAudio.play();
                 }
             });
         }, 100);
@@ -161,7 +165,6 @@ class Personaje {
     colisionaCon(objeto) {
         const hitboxX = this.x + this.hitboxOffsetX;
         const hitboxY = this.y + this.hitboxOffsetY;
-
         return (
             hitboxX < objeto.x + objeto.width &&
             hitboxX + this.hitboxWidth > objeto.x &&
@@ -170,11 +173,18 @@ class Personaje {
         );
     }
     actualizarMovimiento(teclas) {
+        // Para detenerse si hay una animación de muerte o diálogo
+        if (!controlesActivos) {
+            this.cambiarSprite("idle");
+            return;
+        }
         // Aceleración hacia izquierda o derecha
         if (teclas["ArrowRight"]) {
             this.vx += this.aceleracion;
+            this.element.style.transform = "scaleX(1)"; // mirar a la derecha
         } else if (teclas["ArrowLeft"]) {
             this.vx -= this.aceleracion;
+            this.element.style.transform = "scaleX(-1)"; // mirar a la izquierda
         } else {
             // Aplicar fricción cuando no se pulsa nada
             this.vx *= this.friccion;
@@ -272,13 +282,29 @@ function mostrarMensaje(texto) {
 
 function mostrarMensajeEnJuego(texto) {
     return new Promise((resolve) => {
+        controlesActivos = false;
         const mensaje = document.getElementById("mensaje-juego");
+        const hablante = document.getElementById("hablante");
+
         mensaje.innerHTML = texto;
         mensaje.classList.remove("oculto");
+        hablante.classList.remove("oculto");
+
+        // Iniciar animación del sprite
+        let frame = 0;
+        const totalFrames = 4;
+        const frameWidth = 162;
+        const animInterval = setInterval(() => {
+            hablante.style.backgroundPosition = `-${frame * frameWidth}px 0`;
+            frame = (frame + 1) % totalFrames;
+        }, 200); // cambia de frame cada 200 ms
 
         function quitarMensaje() {
             mensaje.classList.add("oculto");
+            hablante.classList.add("oculto");
+            clearInterval(animInterval);
             window.removeEventListener("keydown", quitarMensaje);
+            controlesActivos = true;
             resolve();
         }
 
@@ -287,6 +313,6 @@ function mostrarMensajeEnJuego(texto) {
 }
 
 (async function () {
-    await mostrarMensajeEnJuego(`Pick all the fire souls to summon the demon Targoroth and start his reign of terror.<br><br>Also each soul sigil gives you 10 points. Controls: arrow keys.`);
+    await mostrarMensajeEnJuego(`I am the demon Haagenti. Pick all of my servants's fire souls to summon me. You'll be rewarded for your mad skills.<br><br>Each soul sigil gives you 10 points. Controls: arrow keys.`);
     const juego = new Game();
 })();
