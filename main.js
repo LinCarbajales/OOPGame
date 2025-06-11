@@ -57,7 +57,7 @@ class Game {
 
 class Personaje {
     constructor() {
-        this.x = 50;
+        this.x = -20;
         this.y = 200;
         this.width = 300;
         this.height = 300;
@@ -189,10 +189,10 @@ class Personaje {
             if (this.estado === "muerte") return
             else {
                 this.cambiarSprite("idle");
-            return;
+                return;
             };
         }
-        
+
         // Aceleración hacia izquierda o derecha
         if (teclas["ArrowRight"]) {
             this.vx += this.aceleracion;
@@ -281,7 +281,7 @@ class Personaje {
 
 class Moneda {
     constructor() {
-        this.x = Math.random() * 700 + 50;
+        this.x = Math.random() * (726 - 180) + 180;
         this.y = Math.random() * 250 + 50;
         this.width = 64;
         this.height = 64;
