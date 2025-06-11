@@ -11,7 +11,7 @@ class Game {
     crearEscenario() {
         this.personaje = new Personaje();
         this.container.appendChild(this.personaje.element);
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             const moneda = new Moneda();
             this.monedas.push(moneda);
             this.container.appendChild(moneda.element);
@@ -231,6 +231,8 @@ class Moneda {
         this.element.style.position = "absolute";
         this.actualizarPosicion();
 
+        this.element.src = `img/Effect1/${this.frame}.png`;
+
         // Empezamos la animación
         this.animar();
     }
@@ -248,4 +250,43 @@ class Moneda {
     }
 }
 
-const juego = new Game();
+//Mensajes
+
+function mostrarMensaje(texto) {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById("mensaje-overlay");
+        const textoElemento = document.getElementById("mensaje-texto");
+
+        textoElemento.textContent = texto;
+        overlay.classList.remove("oculto");
+
+        function cerrarMensaje() {
+            overlay.classList.add("oculto");
+            window.removeEventListener("keydown", cerrarMensaje);
+            resolve();
+        }
+
+        window.addEventListener("keydown", cerrarMensaje, { once: true });
+    });
+}
+
+function mostrarMensajeEnJuego(texto) {
+    return new Promise((resolve) => {
+        const mensaje = document.getElementById("mensaje-juego");
+        mensaje.innerHTML = texto;
+        mensaje.classList.remove("oculto");
+
+        function quitarMensaje() {
+            mensaje.classList.add("oculto");
+            window.removeEventListener("keydown", quitarMensaje);
+            resolve();
+        }
+
+        window.addEventListener("keydown", quitarMensaje, { once: true });
+    });
+}
+
+(async function () {
+    await mostrarMensajeEnJuego(`Pick all the fire souls to summon the demon Targoroth and start his reign of terror.<br><br>Also each soul sigil gives you 10 points. Controls: arrow keys.`);
+    const juego = new Game();
+})();

@@ -46,3 +46,24 @@ body {
   text-align: center;
   margin: 10px 0;
 }
+
+/* Mensajes del juego */
+
+.mensaje {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  width: 65%; 
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-size: 20px;
+  text-align: center;
+  z-index: 10;
+}
+
+.oculto {
+  display: none;
+}
