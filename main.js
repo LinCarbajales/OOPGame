@@ -39,6 +39,12 @@ class Game {
                     this.actualizarPuntuacion(10);
                     const soulAudio = new Audio("sounds/Fireball 2.wav");
                     soulAudio.play();
+                    if (this.monedas.length == 0) {
+                        controlesActivos = false;
+                        mostrarMensajeEnJuego("You have summoned me. Your reward is to die first, I'll spare you the suffering of living under my reign of terror.", () => {
+                            this.personaje.animacionMuerte();
+                        })
+                    }
                 }
             });
         }, 100);
@@ -86,6 +92,11 @@ class Personaje {
                 url: 'url("Wizard/Sprites/Move.png")',
                 frames: 8,
                 frameWidth: 300
+            },
+            muerte: {
+                url: 'url("Wizard/Sprites/Death.png")',
+                frames: 5,
+                frameWidth: 300
             }
         };
 
@@ -103,7 +114,7 @@ class Personaje {
     };
 
     animar() {
-        setInterval(() => {
+        this.animacionInterval = setInterval(() => {
             this.frame = (this.frame + 1) % this.numFrames;
             this.element.style.backgroundPosition = `-${this.frame * this.frameWidth}px 0`;
         }, 200); // Cambia frame cada 200 ms
@@ -175,9 +186,13 @@ class Personaje {
     actualizarMovimiento(teclas) {
         // Para detenerse si hay una animación de muerte o diálogo
         if (!controlesActivos) {
-            this.cambiarSprite("idle");
+            if (this.estado === "muerte") return
+            else {
+                this.cambiarSprite("idle");
             return;
+            };
         }
+        
         // Aceleración hacia izquierda o derecha
         if (teclas["ArrowRight"]) {
             this.vx += this.aceleracion;
@@ -214,13 +229,53 @@ class Personaje {
             this.saltar();
         }
 
-        if (!this.saltando) {
-            this.cambiarSprite("idle");
-        } else {
-            this.cambiarSprite("saltar");
-        };
+        if (this.estado !== "muerte") {
+            if (!this.saltando) {
+                this.cambiarSprite("idle");
+            } else {
+                this.cambiarSprite("saltar");
+            }
+        }
 
         this.actualizarPosicion();
+    }
+    animacionMuerte() {
+        this.vx = 0;
+        this.estado = "muerte";
+        controlesActivos = false;
+
+        if (this.animacionInterval) {
+            clearInterval(this.animacionInterval);
+            this.animacionInterval = null;
+        }
+
+        const sprite = this.spriteData["muerte"];
+
+        // Precargar imagen
+        const img = new Image();
+        const spriteURL = sprite.url.replace(/^url\(["']?/, "").replace(/["']?\)$/, "");
+        img.src = spriteURL;
+
+        img.onload = () => {
+            this.element.style.backgroundImage = sprite.url;
+            this.numFrames = sprite.frames;
+            this.frameWidth = sprite.frameWidth;
+            this.frame = 0;
+
+            // Mostrar el primer frame (0) correctamente
+            this.element.style.backgroundPosition = `0px 0`;
+
+            // Iniciar animación después
+            const interval = setInterval(() => {
+                this.frame++;
+                if (this.frame >= this.numFrames) {
+                    clearInterval(interval);
+                    this.frame = this.numFrames - 1;
+                    return;
+                }
+                this.element.style.backgroundPosition = `-${this.frame * this.frameWidth}px 0`;
+            }, 200);
+        };
     }
 }
 
@@ -280,39 +335,45 @@ function mostrarMensaje(texto) {
     });
 }
 
-function mostrarMensajeEnJuego(texto) {
-    return new Promise((resolve) => {
-        controlesActivos = false;
-        const mensaje = document.getElementById("mensaje-juego");
-        const hablante = document.getElementById("hablante");
+function mostrarMensajeEnJuego(texto, cuandoSeCierra) {
+    controlesActivos = false;
 
-        mensaje.innerHTML = texto;
-        mensaje.classList.remove("oculto");
-        hablante.classList.remove("oculto");
+    const mensaje = document.getElementById("mensaje-juego");
+    const hablante = document.getElementById("hablante");
 
-        // Iniciar animación del sprite
-        let frame = 0;
-        const totalFrames = 4;
-        const frameWidth = 162;
-        const animInterval = setInterval(() => {
-            hablante.style.backgroundPosition = `-${frame * frameWidth}px 0`;
-            frame = (frame + 1) % totalFrames;
-        }, 200); // cambia de frame cada 200 ms
+    mensaje.innerHTML = texto;
+    mensaje.classList.remove("oculto");
+    hablante.classList.remove("oculto");
 
-        function quitarMensaje() {
+    // Animación simple del personaje
+    let frame = 0;
+    const totalFrames = 4;
+    const frameWidth = 162;
+    const animacion = setInterval(() => {
+        hablante.style.backgroundPosition = `-${frame * frameWidth}px 0`;
+        frame = (frame + 1) % totalFrames;
+    }, 200);
+
+    // Solo cerrar con barra espaciadora
+    function quitarMensaje(e) {
+        if (e.code === "Space") {
             mensaje.classList.add("oculto");
             hablante.classList.add("oculto");
-            clearInterval(animInterval);
+            clearInterval(animacion);
             window.removeEventListener("keydown", quitarMensaje);
-            controlesActivos = true;
-            resolve();
-        }
 
-        window.addEventListener("keydown", quitarMensaje, { once: true });
-    });
+            if (cuandoSeCierra) {
+                cuandoSeCierra();
+            } else {
+                controlesActivos = true;
+            }
+        }
+    }
+
+    window.addEventListener("keydown", quitarMensaje);
 }
 
 (async function () {
-    await mostrarMensajeEnJuego(`I am the demon Haagenti. Pick all of my servants's fire souls to summon me. You'll be rewarded for your mad skills.<br><br>Each soul sigil gives you 10 points. Controls: arrow keys.`);
+    await mostrarMensajeEnJuego(`I am the demon Haagenti. Pick all of my servants's fire souls to summon me. You'll be rewarded for your mad skills.<br><br>Each soul sigil gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
     const juego = new Game();
 })();
