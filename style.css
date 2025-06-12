@@ -33,6 +33,7 @@ body {
   overflow: hidden;
   background: transparent;
   transform-origin: center center;
+  z-index: 20;
 }
 
 .moneda {
@@ -62,7 +63,7 @@ body {
   border-radius: 12px;
   font-size: 20px;
   text-align: center;
-  z-index: 10;
+  z-index: 20;
 }
 
 .hablante {
@@ -79,13 +80,27 @@ body {
   background-position: 0 0;
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 12px;
-  z-index: 10;
+  z-index: 20;
 }
 
 .hablante img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+#big-demon {
+  position: absolute;
+  top: 35%;
+  left: 80%;
+  width: 324px; /* 1296 / 4 = 324 */
+  height: 284px;
+  transform: translate(-50%, -50%);
+  background-image: url("Demon/Sprites/Big.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: 0 0;
+  z-index: 10;
 }
 
 .oculto {

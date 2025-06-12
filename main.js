@@ -43,7 +43,18 @@ class Game {
                         controlesActivos = false;
                         mostrarMensajeEnJuego("You have summoned me. Your reward is to die first, I'll spare you the suffering of living under my reign of terror.", () => {
                             this.personaje.animacionMuerte();
-                        })
+
+                        });
+                        const demonElement = document.getElementById("big-demon");
+                        demonElement.classList.remove("oculto");
+
+                        let demonFrame = 0;
+                        const demonTotalFrames = 4;
+                        const demonFrameWidth = 324;
+                        setInterval(() => {
+                            demonElement.style.backgroundPosition = `-${demonFrame * demonFrameWidth}px 0`;
+                            demonFrame = (demonFrame + 1) % demonTotalFrames;
+                        }, 200);
                     }
                 }
             });
