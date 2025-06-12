@@ -2,7 +2,12 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   overflow: hidden;
-  background-color: #b8b8b8;
+  background-color: black;
+  color: white;
+  background-image: url("img/sigil.webp");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;

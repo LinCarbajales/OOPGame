@@ -58,7 +58,7 @@ class Game {
                                     "Congratulations!<br><br>You died as a fool, but you got 100 points.<br><br>Press SPACE to do it again.",
                                     () => location.reload()
                                 );
-                            }, 1000);
+                            }, 1400);
                         });
                         const demonElement = document.getElementById("big-demon");
                         demonElement.classList.remove("oculto");
@@ -77,7 +77,7 @@ class Game {
     };
     actualizarPuntuacion(puntos) {
         this.puntuacion += puntos;
-        this.puntosElement.textContent = `Puntos: ${this.puntuacion}`;
+        this.puntosElement.textContent = `Points: ${this.puntuacion}`;
     }
 }
 
@@ -402,7 +402,7 @@ function mostrarMensajeEnJuego(texto, cuandoSeCierra) {
 let juego; //variable global
 
 (async function () {
-    await mostrarMensajeEnJuego(`I am the demon Haagenti. Pick all of my servants's fire souls to summon me. You'll be rewarded.<br><br>Each soul sigil gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
+    await mostrarMensajeEnJuego(`I am the demon Haagenti. Get all of my servants's fire souls to summon me. You'll be rewarded.<br><br>Each soul  gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
     juego = new Game();
 })();
 
