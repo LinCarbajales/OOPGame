@@ -402,7 +402,7 @@ function mostrarMensajeEnJuego(texto, cuandoSeCierra) {
 let juego; //variable global
 
 (async function () {
-    await mostrarMensajeEnJuego(`I am the demon Haagenti. Get all of my servants's fire souls to summon me. You'll be rewarded.<br><br>Each soul  gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
+    await mostrarMensajeEnJuego(`I am the demon Haagenti. Get all of my servants' fire souls to summon me. You'll be rewarded.<br><br>Each soul  gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
     juego = new Game();
 })();
 
