@@ -42,8 +42,23 @@ class Game {
                     if (this.monedas.length == 0) {
                         controlesActivos = false;
                         mostrarMensajeEnJuego("You have summoned me. Your reward is to die first, I'll spare you the suffering of living under my reign of terror.", () => {
+                            crearExplosionSobrePersonaje();
                             this.personaje.animacionMuerte();
+                            setTimeout(() => {
+                                const personaje = document.querySelector(".personaje");
+                                const demonio = document.getElementById("big-demon");
 
+                                personaje.style.display = "none";
+                                demonio.style.display = "none";
+
+                                const contenedor = document.getElementById("game-container");
+                                contenedor.classList.add("endscreen");
+
+                                mostrarMensajeEnJuego(
+                                    "Congratulations!<br><br>You died as a fool, but you got 100 points.<br><br>Press SPACE to do it again.",
+                                    () => location.reload()
+                                );
+                            }, 1000);
                         });
                         const demonElement = document.getElementById("big-demon");
                         demonElement.classList.remove("oculto");
@@ -384,7 +399,38 @@ function mostrarMensajeEnJuego(texto, cuandoSeCierra) {
     window.addEventListener("keydown", quitarMensaje);
 }
 
+let juego; //variable global
+
 (async function () {
-    await mostrarMensajeEnJuego(`I am the demon Haagenti. Pick all of my servants's fire souls to summon me. You'll be rewarded for your mad skills.<br><br>Each soul sigil gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
-    const juego = new Game();
+    await mostrarMensajeEnJuego(`I am the demon Haagenti. Pick all of my servants's fire souls to summon me. You'll be rewarded.<br><br>Each soul sigil gives you 10 points. Controls: arrow keys.<br><br>Press SPACE to start.`);
+    juego = new Game();
 })();
+
+function crearExplosionSobrePersonaje() {
+    const personaje = juego.personaje; // ← Esto solo funciona si `juego` está en scope global
+    const explosion = document.createElement("div");
+    explosion.classList.add("explosion");
+
+    const frameWidth = 64;
+    const totalFrames = 10;
+    let frame = 0;
+
+    // Posicionar centrado sobre el personaje
+    const px = personaje.x + (personaje.width / 2) - (frameWidth / 2);
+    const py = personaje.y + (personaje.height / 2) - (frameWidth / 2);
+    explosion.style.left = `${px}px`;
+    explosion.style.top = `${py}px`;
+
+    document.getElementById("game-container").appendChild(explosion);
+    const explosionAudio = new Audio("sounds/Firebuff 2.wav");
+    explosionAudio.play();
+
+    const interval = setInterval(() => {
+        explosion.style.backgroundPosition = `-${frame * frameWidth}px 0`;
+        frame++;
+        if (frame >= totalFrames) {
+            clearInterval(interval);
+            explosion.remove(); // quitar la animación cuando termine
+        }
+    }, 100); // 10 FPS
+}

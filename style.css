@@ -106,3 +106,21 @@ body {
 .oculto {
   display: none;
 }
+
+.explosion {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  background-image: url("img/Explosion.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  pointer-events: none;
+  z-index: 30;
+}
+
+#game-container.endscreen {
+    background-image: url("img/endscreen.webp");
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+}
