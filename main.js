@@ -242,11 +242,11 @@ class Personaje {
         const margenVisible = 130;
         // Cuando el personaje se acerca al borde derecho
         if (this.x > anchoEscenario - margenVisible) {
-            this.x = -this.width + margenVisible; // Empieza a asomar por la izquierda
+            this.x = -this.width + margenVisible;
         }
         // Cuando el personaje se acerca al borde izquierdo
         if (this.x < -this.width + margenVisible) {
-            this.x = anchoEscenario - margenVisible; // Empieza a asomar por la derecha
+            this.x = anchoEscenario - margenVisible;
         }
 
         // Cambiar el sprite al saltar
