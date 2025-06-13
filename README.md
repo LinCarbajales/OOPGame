@@ -7,12 +7,14 @@ Use the arrow keys to move and jump.
 
 Press SPACE to continue dialogues.
 
-🧱 Features
+🧱 Features:
+
 Fluid controls.
 
 Animated characters.
 
 Narrative with an ending event and endscreen.
 
-🖼️ Assets
+🖼️ Assets:
+
 The animated characters and objects are free assets from itch.io users.
