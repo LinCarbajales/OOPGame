@@ -18,4 +18,4 @@ Narrative with an ending event and endscreen.
 
 🖼️ Assets:
 
-The animated characters and objects are free assets from itch.io users.
+The art for the animated characters and objects are free assets from itch.io users.
